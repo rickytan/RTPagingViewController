@@ -1,0 +1,92 @@
+//
+//  AppDelegate.m
+//  RTPagingViewController
+//
+//  Created by ricky on 13-8-6.
+//  Copyright (c) 2013年 ricky. All rights reserved.
+//
+
+#import "AppDelegate.h"
+#import "RTPagingViewController.h"
+
+@implementation AppDelegate
+
+- (void)dealloc
+{
+    [_window release];
+    [super dealloc];
+}
+
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+    self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
+    // Override point for customization after application launch.
+    self.window.backgroundColor = [UIColor whiteColor];
+    
+    RTPagingViewController *pagingViewController = [[RTPagingViewController alloc] init];
+    pagingViewController.title = @"RTPagingViewController";
+    
+    UIView *shadow = [[UIView alloc] initWithFrame:CGRectMake(0, 34, 320, 2)];
+    shadow.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+    shadow.backgroundColor = [UIColor blueColor];
+    [pagingViewController.titleView addSubview:shadow];
+    [shadow release];
+    
+    UIView *indicator = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 64, 4)];
+    indicator.backgroundColor = [UIColor blueColor];
+    pagingViewController.titleIndicatorView = indicator;
+    [indicator release];
+    
+    UIViewController *c0 = [[[UIViewController alloc] init] autorelease];
+    c0.title = @"View0";
+    c0.view.backgroundColor = [UIColor orangeColor];
+    UIViewController *c1 = [[[UIViewController alloc] init] autorelease];
+    c1.title = @"View1";
+    c1.view.backgroundColor = [UIColor grayColor];
+    UIViewController *c2 = [[[UITableViewController alloc] init] autorelease];
+    c2.title = @"View2";
+    c2.view.backgroundColor = [UIColor greenColor];
+    UIViewController *c3 = [[[UIPageViewController alloc] init] autorelease];
+    c3.title = @"View3";
+    c3.view.backgroundColor = [UIColor redColor];
+    
+    pagingViewController.titleColor = [UIColor blackColor];
+    pagingViewController.selectedTitleColor = [UIColor blueColor];
+    
+    pagingViewController.controllers = [NSArray arrayWithObjects:c0, c1, c2, c3, nil];
+    UINavigationController *nav = [[[UINavigationController alloc] initWithRootViewController:pagingViewController] autorelease];
+    
+    self.window.rootViewController = nav;
+    
+    [self.window makeKeyAndVisible];
+    return YES;
+}
+
+- (void)applicationWillResignActive:(UIApplication *)application
+{
+    // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
+    // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+}
+
+- (void)applicationDidEnterBackground:(UIApplication *)application
+{
+    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
+    // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+}
+
+- (void)applicationWillEnterForeground:(UIApplication *)application
+{
+    // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application
+{
+    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+}
+
+- (void)applicationWillTerminate:(UIApplication *)application
+{
+    // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+@end

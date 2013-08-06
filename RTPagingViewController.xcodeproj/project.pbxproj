@@ -1,0 +1,299 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		9C757AD017B14E8700ADD58B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C757ACF17B14E8700ADD58B /* UIKit.framework */; };
+		9C757AD217B14E8700ADD58B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C757AD117B14E8700ADD58B /* Foundation.framework */; };
+		9C757AD417B14E8700ADD58B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C757AD317B14E8700ADD58B /* CoreGraphics.framework */; };
+		9C757ADA17B14E8700ADD58B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9C757AD817B14E8700ADD58B /* InfoPlist.strings */; };
+		9C757ADC17B14E8700ADD58B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C757ADB17B14E8700ADD58B /* main.m */; };
+		9C757AE017B14E8700ADD58B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C757ADF17B14E8700ADD58B /* AppDelegate.m */; };
+		9C757AE217B14E8700ADD58B /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 9C757AE117B14E8700ADD58B /* Default.png */; };
+		9C757AE417B14E8700ADD58B /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9C757AE317B14E8700ADD58B /* Default@2x.png */; };
+		9C757AE617B14E8700ADD58B /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9C757AE517B14E8700ADD58B /* Default-568h@2x.png */; };
+		9C757AEF17B1553A00ADD58B /* RTPagingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C757AEE17B14EF400ADD58B /* RTPagingViewController.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		9C757ACC17B14E8700ADD58B /* RTPagingViewController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RTPagingViewController.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9C757ACF17B14E8700ADD58B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		9C757AD117B14E8700ADD58B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		9C757AD317B14E8700ADD58B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		9C757AD717B14E8700ADD58B /* RTPagingViewController-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "RTPagingViewController-Info.plist"; sourceTree = "<group>"; };
+		9C757AD917B14E8700ADD58B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		9C757ADB17B14E8700ADD58B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		9C757ADD17B14E8700ADD58B /* RTPagingViewController-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RTPagingViewController-Prefix.pch"; sourceTree = "<group>"; };
+		9C757ADE17B14E8700ADD58B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		9C757ADF17B14E8700ADD58B /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		9C757AE117B14E8700ADD58B /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		9C757AE317B14E8700ADD58B /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		9C757AE517B14E8700ADD58B /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		9C757AED17B14EF400ADD58B /* RTPagingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTPagingViewController.h; sourceTree = "<group>"; };
+		9C757AEE17B14EF400ADD58B /* RTPagingViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTPagingViewController.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		9C757AC917B14E8700ADD58B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9C757AD017B14E8700ADD58B /* UIKit.framework in Frameworks */,
+				9C757AD217B14E8700ADD58B /* Foundation.framework in Frameworks */,
+				9C757AD417B14E8700ADD58B /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		9C757AC317B14E8700ADD58B = {
+			isa = PBXGroup;
+			children = (
+				9C757AEC17B14EB500ADD58B /* Classes */,
+				9C757AD517B14E8700ADD58B /* RTPagingViewController */,
+				9C757ACE17B14E8700ADD58B /* Frameworks */,
+				9C757ACD17B14E8700ADD58B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		9C757ACD17B14E8700ADD58B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9C757ACC17B14E8700ADD58B /* RTPagingViewController.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9C757ACE17B14E8700ADD58B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9C757ACF17B14E8700ADD58B /* UIKit.framework */,
+				9C757AD117B14E8700ADD58B /* Foundation.framework */,
+				9C757AD317B14E8700ADD58B /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		9C757AD517B14E8700ADD58B /* RTPagingViewController */ = {
+			isa = PBXGroup;
+			children = (
+				9C757ADE17B14E8700ADD58B /* AppDelegate.h */,
+				9C757ADF17B14E8700ADD58B /* AppDelegate.m */,
+				9C757AD617B14E8700ADD58B /* Supporting Files */,
+			);
+			path = RTPagingViewController;
+			sourceTree = "<group>";
+		};
+		9C757AD617B14E8700ADD58B /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				9C757AD717B14E8700ADD58B /* RTPagingViewController-Info.plist */,
+				9C757AD817B14E8700ADD58B /* InfoPlist.strings */,
+				9C757ADB17B14E8700ADD58B /* main.m */,
+				9C757ADD17B14E8700ADD58B /* RTPagingViewController-Prefix.pch */,
+				9C757AE117B14E8700ADD58B /* Default.png */,
+				9C757AE317B14E8700ADD58B /* Default@2x.png */,
+				9C757AE517B14E8700ADD58B /* Default-568h@2x.png */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		9C757AEC17B14EB500ADD58B /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				9C757AED17B14EF400ADD58B /* RTPagingViewController.h */,
+				9C757AEE17B14EF400ADD58B /* RTPagingViewController.m */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		9C757ACB17B14E8700ADD58B /* RTPagingViewController */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9C757AE917B14E8700ADD58B /* Build configuration list for PBXNativeTarget "RTPagingViewController" */;
+			buildPhases = (
+				9C757AC817B14E8700ADD58B /* Sources */,
+				9C757AC917B14E8700ADD58B /* Frameworks */,
+				9C757ACA17B14E8700ADD58B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RTPagingViewController;
+			productName = RTPagingViewController;
+			productReference = 9C757ACC17B14E8700ADD58B /* RTPagingViewController.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		9C757AC417B14E8700ADD58B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = ricky;
+			};
+			buildConfigurationList = 9C757AC717B14E8700ADD58B /* Build configuration list for PBXProject "RTPagingViewController" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 9C757AC317B14E8700ADD58B;
+			productRefGroup = 9C757ACD17B14E8700ADD58B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				9C757ACB17B14E8700ADD58B /* RTPagingViewController */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		9C757ACA17B14E8700ADD58B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9C757ADA17B14E8700ADD58B /* InfoPlist.strings in Resources */,
+				9C757AE217B14E8700ADD58B /* Default.png in Resources */,
+				9C757AE417B14E8700ADD58B /* Default@2x.png in Resources */,
+				9C757AE617B14E8700ADD58B /* Default-568h@2x.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		9C757AC817B14E8700ADD58B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9C757ADC17B14E8700ADD58B /* main.m in Sources */,
+				9C757AE017B14E8700ADD58B /* AppDelegate.m in Sources */,
+				9C757AEF17B1553A00ADD58B /* RTPagingViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		9C757AD817B14E8700ADD58B /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				9C757AD917B14E8700ADD58B /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		9C757AE717B14E8700ADD58B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		9C757AE817B14E8700ADD58B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		9C757AEA17B14E8700ADD58B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "RTPagingViewController/RTPagingViewController-Prefix.pch";
+				INFOPLIST_FILE = "RTPagingViewController/RTPagingViewController-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		9C757AEB17B14E8700ADD58B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "RTPagingViewController/RTPagingViewController-Prefix.pch";
+				INFOPLIST_FILE = "RTPagingViewController/RTPagingViewController-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		9C757AC717B14E8700ADD58B /* Build configuration list for PBXProject "RTPagingViewController" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9C757AE717B14E8700ADD58B /* Debug */,
+				9C757AE817B14E8700ADD58B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9C757AE917B14E8700ADD58B /* Build configuration list for PBXNativeTarget "RTPagingViewController" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9C757AEA17B14E8700ADD58B /* Debug */,
+				9C757AEB17B14E8700ADD58B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 9C757AC417B14E8700ADD58B /* Project object */;
+}

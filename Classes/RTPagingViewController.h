@@ -28,5 +28,5 @@
 
 @property (nonatomic, retain) UIColor *titleColor;
 @property (nonatomic, retain) UIColor *selectedTitleColor;
-
+@property (nonatomic, retain) UIFont *titleFont;
 @end

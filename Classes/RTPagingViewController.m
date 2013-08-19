@@ -100,8 +100,10 @@
     
     [self loadTitles];
     [self loadControllers];
+    [UIView setAnimationsEnabled:NO];
     [self updateTitleSelection];
     [self updateTitleIndicator];
+    [UIView setAnimationsEnabled:YES];
 }
 
 - (void)didReceiveMemoryWarning
@@ -147,8 +149,12 @@
         CGFloat halfWidth = width / 2.0;
         
         CGFloat offset = self.scrollView.contentOffset.x / self.scrollView.bounds.size.width;
-        self.titleIndicatorView.center = CGPointMake(width * offset + halfWidth + self.indicatorOffset.x,
-                                                     halfHeight + self.indicatorOffset.y);
+        [UIView animateWithDuration:0.25
+                         animations:^{
+                             self.titleIndicatorView.center = CGPointMake(width * offset + halfWidth + self.indicatorOffset.x,
+                                                                          halfHeight + self.indicatorOffset.y);
+                             
+                         }];
     }
 }
 
@@ -165,7 +171,7 @@
         int i = 0;
         for (UIViewController *c in self.controllers) {
             UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-            btn.titleLabel.font = [UIFont systemFontOfSize:14.0];
+            btn.titleLabel.font = self.titleFont ? self.titleFont : [UIFont systemFontOfSize:14.0];
             btn.titleLabel.textAlignment = UITextAlignmentCenter;
             btn.titleLabel.lineBreakMode = UILineBreakModeMiddleTruncation;
             //btn.titleLabel.shadowOffset = CGSizeMake(1, 1);

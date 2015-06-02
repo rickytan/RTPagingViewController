@@ -241,9 +241,9 @@
         frame.size.height = TITLE_VIEW_HEIGHT;
         if (self.navigationController.navigationBar.isTranslucent) {
             frame.origin.y += self.navigationController.navigationBar.bounds.size.height;
-        }
-        if (!self.wantsFullScreenLayout) {
-            frame.origin.y += [UIApplication sharedApplication].statusBarFrame.size.height;
+            if (!self.wantsFullScreenLayout) {
+                frame.origin.y += [UIApplication sharedApplication].statusBarFrame.size.height;
+            }
         }
 
         _titleView = [[UIView alloc] initWithFrame:frame];
@@ -263,10 +263,10 @@
         if (self.navigationController.navigationBar.isTranslucent) {
             frame.origin.y += self.navigationController.navigationBar.bounds.size.height;
             frame.size.height -= self.navigationController.navigationBar.bounds.size.height;
-        }
-        if (!self.wantsFullScreenLayout) {
-            frame.origin.y += [UIApplication sharedApplication].statusBarFrame.size.height;
-            frame.size.height -= [UIApplication sharedApplication].statusBarFrame.size.height;
+            if (!self.wantsFullScreenLayout) {
+                frame.origin.y += [UIApplication sharedApplication].statusBarFrame.size.height;
+                frame.size.height -= [UIApplication sharedApplication].statusBarFrame.size.height;
+            }
         }
 
         _contentView = [[UIView alloc] initWithFrame:frame];

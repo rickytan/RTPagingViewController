@@ -11,15 +11,10 @@
 
 @implementation AppDelegate
 
-- (void)dealloc
-{
-    [_window release];
-    [super dealloc];
-}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor whiteColor];
     
@@ -29,24 +24,22 @@
     UIView *shadow = [[UIView alloc] initWithFrame:CGRectMake(0, 34, 320, 2)];
     shadow.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     shadow.backgroundColor = [UIColor blueColor];
-    [pagingViewController.titleView addSubview:shadow];
-    [shadow release];
+    //[pagingViewController.titleView addSubview:shadow];
     
     UIView *indicator = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 64, 4)];
     indicator.backgroundColor = [UIColor blueColor];
     pagingViewController.titleIndicatorView = indicator;
-    [indicator release];
     
-    UIViewController *c0 = [[[UIViewController alloc] init] autorelease];
+    UIViewController *c0 = [[UIViewController alloc] init];
     c0.title = @"View0";
     c0.view.backgroundColor = [UIColor orangeColor];
-    UIViewController *c1 = [[[UIViewController alloc] init] autorelease];
+    UIViewController *c1 = [[UIViewController alloc] init];
     c1.title = @"View1";
     c1.view.backgroundColor = [UIColor grayColor];
-    UIViewController *c2 = [[[UITableViewController alloc] init] autorelease];
+    UIViewController *c2 = [[UITableViewController alloc] init];
     c2.title = @"View2";
     c2.view.backgroundColor = [UIColor greenColor];
-    UIViewController *c3 = [[[UIPageViewController alloc] init] autorelease];
+    UIViewController *c3 = [[UIPageViewController alloc] init];
     c3.title = @"View3";
     c3.view.backgroundColor = [UIColor redColor];
     
@@ -54,7 +47,9 @@
     pagingViewController.selectedTitleColor = [UIColor blueColor];
     
     pagingViewController.controllers = [NSArray arrayWithObjects:c0, c1, c2, c3, nil];
-    UINavigationController *nav = [[[UINavigationController alloc] initWithRootViewController:pagingViewController] autorelease];
+    pagingViewController.currentControllerIndex= 2;
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:pagingViewController];
+    //    nav.navigationBar.translucent = NO;
     
     self.window.rootViewController = nav;
     

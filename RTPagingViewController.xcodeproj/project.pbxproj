@@ -254,6 +254,7 @@
 		9C757AEA17B14E8700ADD58B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "RTPagingViewController/RTPagingViewController-Prefix.pch";
 				INFOPLIST_FILE = "RTPagingViewController/RTPagingViewController-Info.plist";
@@ -265,6 +266,7 @@
 		9C757AEB17B14E8700ADD58B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "RTPagingViewController/RTPagingViewController-Prefix.pch";
 				INFOPLIST_FILE = "RTPagingViewController/RTPagingViewController-Info.plist";
@@ -292,6 +294,7 @@
 				9C757AEB17B14E8700ADD58B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

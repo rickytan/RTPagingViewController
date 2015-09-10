@@ -16,7 +16,6 @@ IB_DESIGNABLE
     UIViewController            * _controllerToRemove;
     UIViewController            * _previousController;
     UIViewController            * _nextController;
-    //NSInteger                     _possibleIndex;
 }
 @property (nonatomic, strong, readonly) RTGridContainerView *titleView;
 @property (nonatomic, strong) UIView *titleIndicatorView;
@@ -33,4 +32,9 @@ IB_DESIGNABLE
 
 - (instancetype)initWithController:(NSArray *)controllers;
 
+@end
+
+
+@interface UIViewController (RTPagingViewController)
+@property (nonatomic, readonly) RTPagingViewController *rt_pagingViewController;
 @end

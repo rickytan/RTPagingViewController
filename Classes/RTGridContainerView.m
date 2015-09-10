@@ -17,6 +17,8 @@ const CGFloat RTGridSizeDynamicSize = -1.f;
 {
     self.gridSize = CGSizeMake(25.f, 25.f);
     self.itemMargin = 8.f;
+    self.showsHorizontalScrollIndicator = NO;
+    self.showsVerticalScrollIndicator = NO;
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder
@@ -62,7 +64,7 @@ const CGFloat RTGridSizeDynamicSize = -1.f;
 {
     [super layoutSubviews];
 
-    CGRect contentRect = UIEdgeInsetsInsetRect(self.bounds, self.contentInset);
+    CGRect contentRect = UIEdgeInsetsInsetRect((CGRect){{0, 0}, self.bounds.size}, self.contentInset);
     CGFloat step = MAX(self.gridSize.width + self.itemMargin, 2.f);
     CGPoint offset = contentRect.origin;
 
@@ -70,6 +72,8 @@ const CGFloat RTGridSizeDynamicSize = -1.f;
         view.frame = (CGRect){offset, self.gridSize};
         offset.x += step;
     }
+
+    self.contentSize = CGSizeMake(offset.x - self.itemMargin + self.contentInset.right, self.gridSize.height + self.contentInset.top + self.contentInset.bottom);
 }
 
 - (void)setGridItems:(NSArray *)gridItems
@@ -82,6 +86,15 @@ const CGFloat RTGridSizeDynamicSize = -1.f;
     }
     [self setNeedsLayout];
     [self invalidateIntrinsicContentSize];
+}
+
+- (CGPoint)positionForItemAtIndex:(CGFloat)index
+{
+    CGRect contentRect = UIEdgeInsetsInsetRect((CGRect){{0, 0}, self.bounds.size}, self.contentInset);
+    CGFloat step = MAX(self.gridSize.width + self.itemMargin, 2.f);
+    CGPoint offset = contentRect.origin;
+    return CGPointMake(offset.x + step * index + self.gridSize.width / 2,
+                       offset.y + self.gridSize.height / 2);
 }
 
 - (void)setItemMargin:(CGFloat)itemMargin
@@ -102,8 +115,8 @@ const CGFloat RTGridSizeDynamicSize = -1.f;
 
 - (void)setContentInset:(UIEdgeInsets)contentInset
 {
-    if (!UIEdgeInsetsEqualToEdgeInsets(_contentInset, contentInset)) {
-        _contentInset = contentInset;
+    if (!UIEdgeInsetsEqualToEdgeInsets(self.contentInset, contentInset)) {
+        [super setContentInset:contentInset];
         [self setNeedsLayout];
         [self invalidateIntrinsicContentSize];
     }

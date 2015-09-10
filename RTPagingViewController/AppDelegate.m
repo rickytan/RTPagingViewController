@@ -33,6 +33,7 @@
     
     UIView *indicator = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 64, 4)];
     indicator.backgroundColor = [UIColor blueColor];
+    indicator.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
     pagingViewController.titleIndicatorView = indicator;
     
     UIViewController *c0 = [[BaseViewController alloc] init];
@@ -52,10 +53,11 @@
     pagingViewController.selectedTitleColor = [UIColor blueColor];
     
     pagingViewController.controllers = [NSArray arrayWithObjects:c0, c1, c2, c3, nil];
-    pagingViewController.currentControllerIndex= 2;
+    pagingViewController.currentControllerIndex = 2;
+
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:pagingViewController];
     nav.navigationBar.barStyle = UIBarStyleBlackTranslucent;
-    //    nav.navigationBar.translucent = NO;
+    nav.navigationBar.translucent = YES;
     
     self.window.rootViewController = nav;
     

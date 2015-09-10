@@ -8,6 +8,19 @@
 
 #import "RTPagingViewController.h"
 
+@implementation UIViewController (RTPagingViewController)
+
+- (RTPagingViewController *)rt_pagingViewController
+{
+    UIViewController *vc = self.parentViewController;
+    while (![vc isKindOfClass:[RTPagingViewController class]]) {
+        vc = vc.parentViewController;
+    }
+    return (RTPagingViewController *)vc;
+}
+
+@end
+
 @interface RTPagingViewController ()
 <UIScrollViewDelegate>
 @property (nonatomic, strong) UIScrollView *scrollView;
@@ -15,6 +28,7 @@
 @property (nonatomic, strong) RTGridContainerView *titleView;
 
 @property (nonatomic, assign) BOOL scrollingStarted;
+@property (nonatomic, assign) BOOL scrollMoved;
 @property (nonatomic, assign) CGPoint lastScrollOffset;
 
 - (void)loadTitles;
@@ -83,6 +97,7 @@
     [self.view addSubview:self.contentView];
     [self.view addSubview:self.titleView];
 
+    self.titleView.itemMargin = 8.f;
     [self.titleView addSubview:self.titleIndicatorView];
     [self.contentView addSubview:self.scrollView];
 
@@ -125,22 +140,20 @@
 {
     [super viewDidLayoutSubviews];
 
-    self.contentView.frame = [self frameForContentView];
+    CGRect slice, remainder;
+    CGRectDivide((CGRect){{0, 0}, self.view.bounds.size}, &slice, &remainder, self.titleViewHeight, CGRectMinYEdge);
+    self.titleView.frame = slice;
+    self.contentView.frame = remainder;
 
-    CGFloat itemWidth = floorf((self.titleView.bounds.size.width + self.titleView.itemMargin) / self.titleView.gridItems.count - self.titleView.itemMargin);
-    self.titleView.gridSize = CGSizeMake(itemWidth, self.titleViewHeight);
+    CGFloat itemWidth = (self.titleView.bounds.size.width + self.titleView.itemMargin) / self.titleView.gridItems.count - self.titleView.itemMargin;
+    self.titleView.gridSize = CGSizeMake(MAX(itemWidth, 60), self.titleViewHeight);
 
     [self updateContentSize];
     [self updateOffset];
     // must after  offset is updated!!
     [self updateTitleIndicator];
 
-
-    CGFloat width = self.scrollView.bounds.size.width;
-    CGRect frame = self.scrollView.bounds;
-    frame.origin.x = width * self.currentControllerIndex;
-
-    self.currentViewController.view.frame = frame;
+    self.currentViewController.view.frame = self.scrollView.bounds;
 }
 
 - (void)didReceiveMemoryWarning
@@ -156,14 +169,51 @@
 
 - (BOOL)shouldAutomaticallyForwardRotationMethods
 {
-    return NO;
+    return YES;
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+    return [self.currentViewController shouldAutorotateToInterfaceOrientation:toInterfaceOrientation];
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+    return [self.currentViewController preferredStatusBarStyle];
+}
+
+- (BOOL)prefersStatusBarHidden
+{
+    return [self.currentViewController prefersStatusBarHidden];
+}
+
+- (UIStatusBarAnimation)preferredStatusBarUpdateAnimation
+{
+    return [self.currentViewController preferredStatusBarUpdateAnimation];
 }
 
 #pragma mark - Methods
 
+- (void)setTitleViewHeight:(CGFloat)titleViewHeight
+{
+    _titleViewHeight = titleViewHeight;
+    if (self.isViewLoaded) {
+        [self.view setNeedsLayout];
+    }
+}
+
+- (void)setTitleColor:(UIColor *)titleColor
+{
+    _titleColor = titleColor;
+    if (self.isViewLoaded) {
+
+    }
+}
+
 - (void)scrollDidEnd
 {
     self.scrollingStarted = NO;
+    self.scrollMoved = NO;
 
     UIViewController *currentVC = self.currentViewController;
     [currentVC endAppearanceTransition];
@@ -219,13 +269,11 @@
 - (void)updateTitleIndicator
 {
     if (self.controllers.count > 0) {
-        CGFloat halfHeight = self.titleView.bounds.size.height - self.titleIndicatorView.bounds.size.height / 2.0;
-        CGFloat width = self.titleView.bounds.size.width / self.controllers.count;
-        CGFloat halfWidth = width / 2.0;
+        CGFloat halfHeight = self.titleViewHeight - self.titleIndicatorView.bounds.size.height / 2.0;
 
-        CGFloat offset = self.scrollView.contentOffset.x / self.scrollView.bounds.size.width;
+        CGFloat offset = [self.titleView positionForItemAtIndex:self.scrollView.contentOffset.x / self.scrollView.bounds.size.width].x;
 
-        self.titleIndicatorView.center = CGPointMake(width * offset + halfWidth + self.indicatorOffset.x,
+        self.titleIndicatorView.center = CGPointMake(offset + self.indicatorOffset.x,
                                                      halfHeight + self.indicatorOffset.y);
     }
 }
@@ -245,6 +293,7 @@
     [btn addTarget:self
             action:@selector(onTitleSelected:)
   forControlEvents:UIControlEventTouchUpInside];
+
     return btn;
 }
 
@@ -260,6 +309,7 @@
             [arr addObject:view];
         }
         self.titleView.gridItems = [NSArray arrayWithArray:arr];
+        [self.titleView bringSubviewToFront:self.titleIndicatorView];
     }
 }
 
@@ -345,23 +395,6 @@
 - (CGRect)frameForContentView
 {
     return CGRectMake(0, self.titleViewHeight, CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds) - self.titleViewHeight);
-    CGRect statusBarFrame = [UIApplication sharedApplication].statusBarFrame;
-    CGFloat statusHeight = statusBarFrame.size.height;
-    if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
-        statusHeight = statusBarFrame.size.width;
-    }
-    CGRect frame = self.view.bounds;
-    frame.origin.y = self.titleViewHeight;
-    frame.size.height -= self.titleViewHeight;
-    if (self.navigationController.navigationBar.isTranslucent) {
-        frame.origin.y += self.navigationController.navigationBar.bounds.size.height;
-        frame.size.height -= self.navigationController.navigationBar.bounds.size.height;
-        if (!self.wantsFullScreenLayout) {
-            frame.origin.y += statusHeight;
-            frame.size.height -= statusHeight;
-        }
-    }
-    return frame;
 }
 
 - (UIView *)contentView
@@ -427,6 +460,9 @@
     if (_titleIndicatorView != titleIndicatorView) {
         _titleIndicatorView = titleIndicatorView;
         _titleIndicatorView.hidden = YES;
+        if (self.isViewLoaded) {
+            [self.titleView addSubview:titleIndicatorView];
+        }
     }
 }
 
@@ -475,10 +511,17 @@
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
     self.lastScrollOffset = scrollView.contentOffset;
+    self.scrollingStarted = YES;
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+    [self updateTitleSelection];
+    [self updateTitleIndicator];
+
+    if (scrollView.layer.animationKeys.count)
+        return;
+
     CGFloat width = self.scrollView.bounds.size.width;
     CGFloat offsetIndex = scrollView.contentOffset.x / width;
     if (offsetIndex - self.currentControllerIndex > 1.f) {
@@ -499,49 +542,47 @@
     }
 
 
-    if (!self.scrollingStarted) {
-        [self.currentViewController beginAppearanceTransition:NO
-                                                     animated:YES];
-    }
-    self.scrollingStarted = YES;
-
-
-    CGFloat currentIndex = self.currentControllerIndex;
-
-    // scroll to right
-    if (offsetIndex > currentIndex) {
-        if ((NSInteger)currentIndex + 1 < self.controllers.count) {
-            if (![self isControllerVisible:_previousController]) {
-                [_previousController endAppearanceTransition];
-                [_previousController.view removeFromSuperview];
-                _previousController = nil;
-            }
-            if (!_nextController) {
-                _nextController = [self loadControllerAtIndex:(int)currentIndex + 1];
-                [_nextController beginAppearanceTransition:YES
-                                                  animated:YES];
-            }
+    if (self.scrollingStarted) {
+        if (!self.scrollMoved) {
+            [self.currentViewController beginAppearanceTransition:NO
+                                                         animated:YES];
         }
-    }
-    // scroll to left
-    else if (offsetIndex < currentIndex) {
-        if ((NSInteger)currentIndex - 1 >= 0) {
-            if (![self isControllerVisible:_nextController]) {
-                [_nextController endAppearanceTransition];
-                [_nextController.view removeFromSuperview];
-                _nextController = nil;
-            }
-            if (!_previousController) {
-                _previousController = [self loadControllerAtIndex:(int)currentIndex - 1];
-                [_previousController beginAppearanceTransition:YES
+
+        self.scrollMoved = YES;
+
+
+        CGFloat currentIndex = self.currentControllerIndex;
+
+        // scroll to right
+        if (offsetIndex > currentIndex) {
+            if ((NSInteger)currentIndex + 1 < self.controllers.count) {
+                if (![self isControllerVisible:_previousController]) {
+                    [_previousController endAppearanceTransition];
+                    [_previousController.view removeFromSuperview];
+                    _previousController = nil;
+                }
+                if (!_nextController) {
+                    _nextController = [self loadControllerAtIndex:(int)currentIndex + 1];
+                    [_nextController beginAppearanceTransition:YES
                                                       animated:YES];
+                }
             }
         }
-    }
-
-    if (scrollView.isDecelerating || scrollView.isDragging) {
-        [self updateTitleSelection];
-        [self updateTitleIndicator];
+        // scroll to left
+        else if (offsetIndex < currentIndex) {
+            if ((NSInteger)currentIndex - 1 >= 0) {
+                if (![self isControllerVisible:_nextController]) {
+                    [_nextController endAppearanceTransition];
+                    [_nextController.view removeFromSuperview];
+                    _nextController = nil;
+                }
+                if (!_previousController) {
+                    _previousController = [self loadControllerAtIndex:(int)currentIndex - 1];
+                    [_previousController beginAppearanceTransition:YES
+                                                          animated:YES];
+                }
+            }
+        }
     }
 }
 
@@ -549,6 +590,7 @@
                      withVelocity:(CGPoint)velocity
               targetContentOffset:(inout CGPoint *)targetContentOffset
 {
+
     NSInteger index = (NSInteger)floorf(targetContentOffset->x / self.scrollView.bounds.size.width);
     if (index == self.currentControllerIndex) {
         [self.currentViewController beginAppearanceTransition:YES
@@ -563,7 +605,8 @@
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView
                   willDecelerate:(BOOL)decelerate
 {
-    if (!self.scrollingStarted)
+
+    if (!self.scrollMoved)
         return;
 
     if (!decelerate) {
@@ -596,7 +639,7 @@
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
-    if (self.scrollingStarted)
+    if (self.scrollMoved)
         [self scrollDidEnd];
 }
 

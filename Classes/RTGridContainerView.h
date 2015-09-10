@@ -12,10 +12,12 @@ extern const CGFloat RTGridSizeDynamicSize;
 
 
 IB_DESIGNABLE
-@interface RTGridContainerView : UIView
+@interface RTGridContainerView : UIScrollView
 @property (nonatomic, assign) IBInspectable CGSize gridSize;
 @property (nonatomic, assign) IBInspectable CGFloat itemMargin;
-@property (nonatomic, assign) IBInspectable UIEdgeInsets contentInset;
 
 @property (nonatomic, strong) NSArray *gridItems;
+
+- (CGPoint)positionForItemAtIndex:(CGFloat)index;
+
 @end

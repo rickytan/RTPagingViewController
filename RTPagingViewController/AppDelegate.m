@@ -54,6 +54,7 @@
     pagingViewController.controllers = [NSArray arrayWithObjects:c0, c1, c2, c3, nil];
     pagingViewController.currentControllerIndex= 2;
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:pagingViewController];
+    nav.navigationBar.barStyle = UIBarStyleBlackTranslucent;
     //    nav.navigationBar.translucent = NO;
     
     self.window.rootViewController = nav;

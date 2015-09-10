@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9C55C4C91BA149D80024E74C /* RTGridContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C55C4C81BA149D80024E74C /* RTGridContainerView.m */; };
+		9C55C4CB1BA14EB90024E74C /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9C55C4CA1BA14EB90024E74C /* Images.xcassets */; };
 		9C757AD017B14E8700ADD58B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C757ACF17B14E8700ADD58B /* UIKit.framework */; };
 		9C757AD217B14E8700ADD58B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C757AD117B14E8700ADD58B /* Foundation.framework */; };
 		9C757AD417B14E8700ADD58B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C757AD317B14E8700ADD58B /* CoreGraphics.framework */; };
@@ -20,6 +22,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9C55C4C71BA149D80024E74C /* RTGridContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTGridContainerView.h; sourceTree = "<group>"; };
+		9C55C4C81BA149D80024E74C /* RTGridContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RTGridContainerView.m; sourceTree = "<group>"; };
+		9C55C4CA1BA14EB90024E74C /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		9C757ACC17B14E8700ADD58B /* RTPagingViewController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RTPagingViewController.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C757ACF17B14E8700ADD58B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		9C757AD117B14E8700ADD58B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -84,6 +89,7 @@
 			children = (
 				9C757ADE17B14E8700ADD58B /* AppDelegate.h */,
 				9C757ADF17B14E8700ADD58B /* AppDelegate.m */,
+				9C55C4CA1BA14EB90024E74C /* Images.xcassets */,
 				9C757AD617B14E8700ADD58B /* Supporting Files */,
 			);
 			path = RTPagingViewController;
@@ -108,6 +114,8 @@
 			children = (
 				9C757AED17B14EF400ADD58B /* RTPagingViewController.h */,
 				9C757AEE17B14EF400ADD58B /* RTPagingViewController.m */,
+				9C55C4C71BA149D80024E74C /* RTGridContainerView.h */,
+				9C55C4C81BA149D80024E74C /* RTGridContainerView.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -164,6 +172,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9C757ADA17B14E8700ADD58B /* InfoPlist.strings in Resources */,
+				9C55C4CB1BA14EB90024E74C /* Images.xcassets in Resources */,
 				9C757AE217B14E8700ADD58B /* Default.png in Resources */,
 				9C757AE417B14E8700ADD58B /* Default@2x.png in Resources */,
 				9C757AE617B14E8700ADD58B /* Default-568h@2x.png in Resources */,
@@ -179,6 +188,7 @@
 			files = (
 				9C757ADC17B14E8700ADD58B /* main.m in Sources */,
 				9C757AE017B14E8700ADD58B /* AppDelegate.m in Sources */,
+				9C55C4C91BA149D80024E74C /* RTGridContainerView.m in Sources */,
 				9C757AEF17B1553A00ADD58B /* RTPagingViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -254,6 +264,8 @@
 		9C757AEA17B14E8700ADD58B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "RTPagingViewController/RTPagingViewController-Prefix.pch";
@@ -266,6 +278,8 @@
 		9C757AEB17B14E8700ADD58B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "RTPagingViewController/RTPagingViewController-Prefix.pch";

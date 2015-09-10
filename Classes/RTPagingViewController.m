@@ -8,16 +8,14 @@
 
 #import "RTPagingViewController.h"
 
-#define TITLE_VIEW_HEIGHT 36.0
-
 @interface RTPagingViewController ()
 {
     //BOOL                      _shouldLoadController;
 }
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) UIView *contentView;
-@property (nonatomic, strong) UIView *titleView;
-@property (nonatomic, strong) NSArray *titleArray;
+@property (nonatomic, strong) RTGridContainerView *titleView;
+
 - (void)loadTitles;
 - (void)loadControllers;
 - (void)scrollDidEnd;
@@ -31,24 +29,46 @@
 
 @implementation RTPagingViewController
 
+- (void)commonInit
+{
+    _currentControllerIndex = -1;
+    self.titleColor = [UIColor colorWithWhite:184.0/255
+                                        alpha:1.0];
+    self.selectedTitleColor = [UIColor colorWithWhite:124.0/255
+                                                alpha:1.0];
+    self.titleViewHeight = 36.f;
+    self.indicatorOffset = CGPointZero;
+    self.titleFont = [UIFont systemFontOfSize:14.f];
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        _currentControllerIndex = -1;
-        self.titleColor = [UIColor colorWithWhite:184.0/255
-                                            alpha:1.0];
-        self.selectedTitleColor = [UIColor colorWithWhite:124.0/255
-                                                    alpha:1.0];
+        [self commonInit];
+    }
+    return self;
+}
+
+- (instancetype)initWithController:(NSArray *)controllers
+{
+    self = [super initWithNibName:nil
+                           bundle:nil];
+    if (self) {
+        [self commonInit];
+        self.controllers = controllers;
     }
     return self;
 }
 
 - (void)loadView
 {
-    [super loadView];
-    self.view.autoresizesSubviews = YES;
+    UIScrollView *view = [[UIScrollView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    view.scrollsToTop = NO;
+    view.autoresizesSubviews = YES;
+
+    self.view = view;
 }
 
 - (void)viewDidLoad
@@ -56,7 +76,9 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 
-    self.automaticallyAdjustsScrollViewInsets = NO;
+    self.automaticallyAdjustsScrollViewInsets = YES;
+
+    self.titleView.gridSize = CGSizeMake(RTGridSizeDynamicSize, self.titleViewHeight);
 
     [self.view addSubview:self.contentView];
     [self.view addSubview:self.titleView];
@@ -69,7 +91,6 @@
 
     //[UIView setAnimationsEnabled:NO];
     [self updateTitleSelection];
-    [self updateTitleIndicator];
     //[UIView setAnimationsEnabled:YES];
 }
 
@@ -77,12 +98,38 @@
 {
     [super viewDidLayoutSubviews];
 
+    self.contentView.frame = [self frameForContentView];
+
+    CGFloat itemWidth = floorf((self.titleView.bounds.size.width + self.titleView.itemMargin) / self.titleView.gridItems.count - self.titleView.itemMargin);
+    self.titleView.gridSize = CGSizeMake(itemWidth, self.titleViewHeight);
+
+    [self updateContentSize];
+    [self updateOffset];
+    // must after  offset is updated!!
+    [self updateTitleIndicator];
+
+
+    CGFloat width = self.scrollView.bounds.size.width;
+    CGRect frame = self.scrollView.bounds;
+    frame.origin.x = width * self.currentControllerIndex;
+
+    self.currentViewController.view.frame = frame;
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (BOOL)shouldAutomaticallyForwardAppearanceMethods
+{
+    return NO;
+}
+
+- (BOOL)shouldAutomaticallyForwardRotationMethods
+{
+    return NO;
 }
 
 #pragma mark - Methods
@@ -101,14 +148,30 @@
     _nextController = nil;
 }
 
+- (void)updateOffset
+{
+    CGFloat width = self.scrollView.bounds.size.width;
+    self.scrollView.contentOffset = CGPointMake(width * _currentControllerIndex, 0);
+}
+
+- (void)updateContentSize
+{
+    CGSize size = self.scrollView.bounds.size;
+    size.width = self.controllers.count * size.width;
+    size.height = 0;
+    self.scrollView.contentSize = size;
+}
+
 - (void)updateTitleSelection
 {
+    /*
     [self.titleArray makeObjectsPerformSelector:@selector(setSelected:)
                                      withObject:@NO];
 
     if (0 <= self.currentControllerIndex && self.currentControllerIndex < self.controllers.count) {
         ((UIButton*)[self.titleArray objectAtIndex:self.currentControllerIndex]).selected = YES;
     }
+     */
 }
 
 - (void)updateTitleIndicator
@@ -125,43 +188,36 @@
     }
 }
 
+- (UIView *)titleLabelForController:(UIViewController *)controller
+{
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+    btn.titleLabel.font = self.titleFont;
+    btn.titleLabel.textAlignment = NSTextAlignmentCenter;
+    btn.titleLabel.lineBreakMode = UILineBreakModeMiddleTruncation;
+    [btn setTitle:controller.title
+         forState:UIControlStateNormal];
+    [btn setTitleColor:self.titleColor
+              forState:UIControlStateNormal];
+    [btn setTitleColor:self.selectedTitleColor
+              forState:UIControlStateSelected];
+    [btn addTarget:self
+            action:@selector(onTitleSelected:)
+  forControlEvents:UIControlEventTouchUpInside];
+    return btn;
+}
+
 - (void)loadTitles
 {
     if (self.controllers.count > 0) {
-        [self.titleArray makeObjectsPerformSelector:@selector(removeFromSuperview)];
-
-        CGFloat halfHeight = self.titleView.bounds.size.height / 2.0;
-        CGFloat width = self.titleView.bounds.size.width / self.controllers.count;
-        CGFloat halfWidth = width / 2.0;
 
         NSMutableArray *arr = [NSMutableArray arrayWithCapacity:self.controllers.count];
-        int i = 0;
+        NSInteger tag = 0;
         for (UIViewController *c in self.controllers) {
-            UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-            btn.titleLabel.font = self.titleFont ? self.titleFont : [UIFont systemFontOfSize:14.0];
-            btn.titleLabel.textAlignment = NSTextAlignmentCenter;
-            btn.titleLabel.lineBreakMode = UILineBreakModeMiddleTruncation;
-            btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-            btn.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
-            [btn setTitle:c.title
-                 forState:UIControlStateNormal];
-            [btn setTitleColor:self.titleColor
-                      forState:UIControlStateNormal];
-            [btn setTitleColor:self.selectedTitleColor
-                      forState:UIControlStateSelected];
-            [btn addTarget:self
-                    action:@selector(onTitleSelected:)
-          forControlEvents:UIControlEventTouchUpInside];
-            [btn sizeToFit];
-            btn.frame = CGRectMake(0, 0, 0.8 * width, 2 * halfHeight);
-            btn.center = CGPointMake(width * i + halfWidth, halfHeight);
-            btn.tag = i;
-            [self.titleView addSubview:btn];
-            [arr addObject:btn];
-
-            ++i;
+            UIView *view = [self titleLabelForController:c];
+            view.tag = tag++;
+            [arr addObject:view];
         }
-        self.titleArray = [NSArray arrayWithArray:arr];
+        self.titleView.gridItems = [NSArray arrayWithArray:arr];
     }
 }
 
@@ -177,18 +233,13 @@
             [self addChildViewController:controller];
 
             if (i++ == self.currentControllerIndex) {
-                CGSize size = self.scrollView.bounds.size;
-                size.width = self.controllers.count * size.width;
-                size.height = 0;
-                self.scrollView.contentSize = size;
 
                 CGFloat width = self.scrollView.bounds.size.width;
                 CGRect frame = self.scrollView.bounds;
                 frame.origin.x = width * self.currentControllerIndex;
                 controller.view.frame = frame;
+                controller.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
                 [self.scrollView addSubview:controller.view];
-                [self.scrollView setContentOffset:CGPointMake(width * self.currentControllerIndex, 0)
-                                         animated:NO];
 
                 [self updateTitleSelection];
                 [self updateTitleIndicator];
@@ -234,19 +285,13 @@
     return (offset + width > minX && offset < maxX);
 }
 
-- (UIView*)titleView
+- (RTGridContainerView *)titleView
 {
     if (!_titleView) {
         CGRect frame = self.view.bounds;
-        frame.size.height = TITLE_VIEW_HEIGHT;
-        if (self.navigationController.navigationBar.isTranslucent) {
-            frame.origin.y += self.navigationController.navigationBar.bounds.size.height;
-            if (!self.wantsFullScreenLayout) {
-                frame.origin.y += [UIApplication sharedApplication].statusBarFrame.size.height;
-            }
-        }
+        frame.size.height = self.titleViewHeight;
 
-        _titleView = [[UIView alloc] initWithFrame:frame];
+        _titleView = [[RTGridContainerView alloc] initWithFrame:frame];
         _titleView.backgroundColor = [UIColor clearColor];
         _titleView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
         _titleView.autoresizesSubviews = YES;
@@ -254,24 +299,35 @@
     return _titleView;
 }
 
+- (CGRect)frameForContentView
+{
+    return CGRectMake(0, self.titleViewHeight, CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds) - self.titleViewHeight);
+    CGRect statusBarFrame = [UIApplication sharedApplication].statusBarFrame;
+    CGFloat statusHeight = statusBarFrame.size.height;
+    if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
+        statusHeight = statusBarFrame.size.width;
+    }
+    CGRect frame = self.view.bounds;
+    frame.origin.y = self.titleViewHeight;
+    frame.size.height -= self.titleViewHeight;
+    if (self.navigationController.navigationBar.isTranslucent) {
+        frame.origin.y += self.navigationController.navigationBar.bounds.size.height;
+        frame.size.height -= self.navigationController.navigationBar.bounds.size.height;
+        if (!self.wantsFullScreenLayout) {
+            frame.origin.y += statusHeight;
+            frame.size.height -= statusHeight;
+        }
+    }
+    return frame;
+}
+
 - (UIView *)contentView
 {
     if (!_contentView) {
-        CGRect frame = self.view.bounds;
-        frame.origin.y = TITLE_VIEW_HEIGHT;
-        frame.size.height -= TITLE_VIEW_HEIGHT;
-        if (self.navigationController.navigationBar.isTranslucent) {
-            frame.origin.y += self.navigationController.navigationBar.bounds.size.height;
-            frame.size.height -= self.navigationController.navigationBar.bounds.size.height;
-            if (!self.wantsFullScreenLayout) {
-                frame.origin.y += [UIApplication sharedApplication].statusBarFrame.size.height;
-                frame.size.height -= [UIApplication sharedApplication].statusBarFrame.size.height;
-            }
-        }
-
-        _contentView = [[UIView alloc] initWithFrame:frame];
+        _contentView = [[UIView alloc] initWithFrame:[self frameForContentView]];
         _contentView.backgroundColor = [UIColor clearColor];
         _contentView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        _contentView.autoresizesSubviews = YES;
     }
     return _contentView;
 }
@@ -286,7 +342,7 @@
         _scrollView.showsHorizontalScrollIndicator = NO;
         _scrollView.showsVerticalScrollIndicator = NO;
         _scrollView.scrollsToTop = NO;
-        _scrollView.bounces = YES;
+        _scrollView.bounces = NO;
         _scrollView.autoresizesSubviews = NO;
         _scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     }
@@ -300,14 +356,22 @@
 
 - (void)setControllers:(NSArray *)controllers
 {
-    if (_controllers == controllers)
+    if ([_controllers isEqualToArray:controllers])
         return;
 
     _currentControllerIndex = 0;
 
+    NSMutableSet *set = [NSMutableSet setWithArray:_controllers];
+    [set minusSet:[NSSet setWithArray:controllers]];
+    NSArray *controllersToRemove = [set allObjects];
+
+    set = [NSMutableSet setWithArray:controllers];
+    [set minusSet:[NSSet setWithArray:_controllers]];
+    NSArray *controllersToAdd = [set allObjects];
+
     _controllers = controllers;
 
-    [self.childViewControllers makeObjectsPerformSelector:@selector(removeFromParentViewController)];
+    [controllersToRemove makeObjectsPerformSelector:@selector(removeFromParentViewController)];
     if (self.isViewLoaded) {
         [self loadTitles];
         [self loadControllers];

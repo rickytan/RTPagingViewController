@@ -9,13 +9,12 @@
 #import "RTPagingViewController.h"
 
 @interface RTPagingViewController ()
-{
-    //BOOL                      _shouldLoadController;
-}
+<UIScrollViewDelegate>
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) UIView *contentView;
 @property (nonatomic, strong) RTGridContainerView *titleView;
 
+@property (nonatomic, assign) BOOL scrollingStarted;
 - (void)loadTitles;
 - (void)loadControllers;
 - (void)scrollDidEnd;
@@ -36,9 +35,10 @@
                                         alpha:1.0];
     self.selectedTitleColor = [UIColor colorWithWhite:124.0/255
                                                 alpha:1.0];
+    self.titleFont = [UIFont systemFontOfSize:14.f];
+
     self.titleViewHeight = 36.f;
     self.indicatorOffset = CGPointZero;
-    self.titleFont = [UIFont systemFontOfSize:14.f];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -94,6 +94,33 @@
     //[UIView setAnimationsEnabled:YES];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.currentViewController beginAppearanceTransition:YES
+                                                 animated:animated];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self.currentViewController endAppearanceTransition];
+
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [self.currentViewController beginAppearanceTransition:NO
+                                                 animated:animated];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [self.currentViewController endAppearanceTransition];
+}
+
 - (void)viewDidLayoutSubviews
 {
     [super viewDidLayoutSubviews];
@@ -136,22 +163,35 @@
 
 - (void)scrollDidEnd
 {
-    int index = (int)floorf(self.scrollView.contentOffset.x / self.scrollView.bounds.size.width);
+    self.scrollingStarted = NO;
+
+    UIViewController *currentVC = self.currentViewController;
+    [currentVC endAppearanceTransition];
+
+    [_previousController endAppearanceTransition];
+    [_nextController endAppearanceTransition];
+
+    NSInteger index = (NSInteger)floorf(self.scrollView.contentOffset.x / self.scrollView.bounds.size.width);
     if (index != self.currentControllerIndex) {
         _currentControllerIndex = index;
+        [currentVC.view removeFromSuperview];
         [self updateTitleSelection];
     }
-
-    [_previousController.view removeFromSuperview];
+    else {
+        [_previousController.view removeFromSuperview];
+        [_nextController.view removeFromSuperview];
+    }
     _previousController = nil;
-    [_nextController.view removeFromSuperview];
     _nextController = nil;
+
 }
 
 - (void)updateOffset
 {
     CGFloat width = self.scrollView.bounds.size.width;
-    self.scrollView.contentOffset = CGPointMake(width * _currentControllerIndex, 0);
+    //    self.scrollView.contentOffset = CGPointMake(width * _currentControllerIndex, 0);
+    [self.scrollView setContentOffset:CGPointMake(width * _currentControllerIndex, 0)
+                             animated:NO];
 }
 
 - (void)updateContentSize
@@ -165,12 +205,12 @@
 - (void)updateTitleSelection
 {
     /*
-    [self.titleArray makeObjectsPerformSelector:@selector(setSelected:)
-                                     withObject:@NO];
+     [self.titleArray makeObjectsPerformSelector:@selector(setSelected:)
+     withObject:@NO];
 
-    if (0 <= self.currentControllerIndex && self.currentControllerIndex < self.controllers.count) {
-        ((UIButton*)[self.titleArray objectAtIndex:self.currentControllerIndex]).selected = YES;
-    }
+     if (0 <= self.currentControllerIndex && self.currentControllerIndex < self.controllers.count) {
+     ((UIButton*)[self.titleArray objectAtIndex:self.currentControllerIndex]).selected = YES;
+     }
      */
 }
 
@@ -231,6 +271,7 @@
         NSInteger i = 0;
         for (UIViewController *controller in self.controllers) {
             [self addChildViewController:controller];
+            [controller didMoveToParentViewController:self];
 
             if (i++ == self.currentControllerIndex) {
 
@@ -248,7 +289,7 @@
     }
 }
 
-- (UIViewController*)loadControllerAtIndex:(NSInteger)index
+- (UIViewController *)loadControllerAtIndex:(NSInteger)index
 {
     CGFloat width = self.scrollView.bounds.size.width;
 
@@ -402,15 +443,23 @@
     }
     if (_currentControllerIndex != currentControllerIndex) {
         _controllerToRemove = self.currentViewController;
+        [_controllerToRemove beginAppearanceTransition:NO
+                                              animated:NO];
 
         _currentControllerIndex = currentControllerIndex;
 
         CGFloat width = self.scrollView.bounds.size.width;
-        [self loadControllerAtIndex:_currentControllerIndex];
+        UIViewController *newCurrent = [self loadControllerAtIndex:_currentControllerIndex];
+        [newCurrent beginAppearanceTransition:YES
+                                     animated:NO];
+
         [self.scrollView setContentOffset:CGPointMake(width * _currentControllerIndex, 0)
                                  animated:NO];
         [_controllerToRemove.view removeFromSuperview];
+        [_controllerToRemove endAppearanceTransition];
         _controllerToRemove = nil;
+
+        [newCurrent endAppearanceTransition];
 
         [self updateTitleSelection];
 
@@ -425,39 +474,78 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    CGFloat width = self.scrollView.bounds.size.width;
-    CGFloat halfWidth = width / 2.0;
+    if (scrollView.isDragging) {
 
-    CGFloat currentIndex = floorf((scrollView.contentOffset.x + halfWidth) / width);
+        if (!self.scrollingStarted) {
+            [self.currentViewController beginAppearanceTransition:NO
+                                                         animated:YES];
+        }
+        self.scrollingStarted = YES;
 
-    CGFloat offsetIndex = scrollView.contentOffset.x / width;
+        CGFloat width = self.scrollView.bounds.size.width;
+        CGFloat halfWidth = width / 2.0;
 
-    if (offsetIndex > currentIndex) {
-        if ((int)currentIndex + 1 < self.controllers.count) {
-            if (![self isControllerVisible:_previousController])
-                [_previousController.view removeFromSuperview];
-            _previousController = _nextController;
-            _nextController = [self loadControllerAtIndex:(int)currentIndex + 1];
+        CGFloat currentIndex = self.currentControllerIndex;// floorf((scrollView.contentOffset.x + halfWidth) / width);
+
+        CGFloat offsetIndex = scrollView.contentOffset.x / width;
+
+        // scroll to right
+        if (offsetIndex > currentIndex) {
+            if ((NSInteger)currentIndex + 1 < self.controllers.count) {
+                if (![self isControllerVisible:_previousController]) {
+                    [_previousController endAppearanceTransition];
+                    [_previousController.view removeFromSuperview];
+                    _previousController = nil;
+                }
+                if (!_nextController) {
+                    _nextController = [self loadControllerAtIndex:(int)currentIndex + 1];
+                    [_nextController beginAppearanceTransition:YES
+                                                      animated:YES];
+                }
+            }
+        }
+        // scroll to left
+        else if (offsetIndex < currentIndex) {
+            if ((NSInteger)currentIndex - 1 >= 0) {
+                if (![self isControllerVisible:_nextController]) {
+                    [_nextController endAppearanceTransition];
+                    [_nextController.view removeFromSuperview];
+                    _nextController = nil;
+                }
+                if (!_previousController) {
+                    _previousController = [self loadControllerAtIndex:(int)currentIndex - 1];
+                    [_previousController beginAppearanceTransition:YES
+                                                          animated:YES];
+                }
+            }
         }
     }
-    else if (offsetIndex < currentIndex) {
-        if ((int)currentIndex - 1 >= 0) {
-            if (![self isControllerVisible:_nextController])
-                [_nextController.view removeFromSuperview];
-            _nextController = _previousController;
-            _previousController = [self loadControllerAtIndex:(int)currentIndex - 1];
-        }
-    }
+
     if (scrollView.isDecelerating || scrollView.isDragging) {
         [self updateTitleSelection];
         [self updateTitleIndicator];
     }
 }
 
+- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView
+                     withVelocity:(CGPoint)velocity
+              targetContentOffset:(inout CGPoint *)targetContentOffset
+{
+    NSInteger index = (NSInteger)floorf((*targetContentOffset).x / self.scrollView.bounds.size.width);
+    if (index == self.currentControllerIndex) {
+        [self.currentViewController beginAppearanceTransition:YES
+                                                     animated:YES];
+        [_previousController beginAppearanceTransition:NO
+                                              animated:YES];
+        [_nextController beginAppearanceTransition:NO
+                                          animated:YES];
+    }
+}
+
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView
                   willDecelerate:(BOOL)decelerate
 {
-
+    
     if (!decelerate) {
         [self scrollDidEnd];
     }

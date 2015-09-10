@@ -3,14 +3,14 @@
 //  iZJU
 //
 //  Created by ricky on 13-6-7.
-//  Copyright (c) 2013年 iZJU Studio. All rights reserved.
+//  Copyright (c) 2013年 ricky. All rights reserved.
 //
 #import <UIKit/UIKit.h>
 #import "RTGridContainerView.h"
 
 
 IB_DESIGNABLE
-@interface RTPagingViewController : UIViewController <UIScrollViewDelegate>
+@interface RTPagingViewController : UIViewController
 {
 @private
     UIViewController            * _controllerToRemove;
@@ -26,9 +26,9 @@ IB_DESIGNABLE
 @property (weak, nonatomic, readonly) UIViewController *currentViewController;
 @property (nonatomic, assign) NSInteger currentControllerIndex;
 
-@property (nonatomic, strong) IBInspectable UIColor *titleColor UI_APPEARANCE_SELECTOR;
-@property (nonatomic, strong) IBInspectable UIColor *selectedTitleColor UI_APPEARANCE_SELECTOR;
-@property (nonatomic, strong) IBInspectable UIFont *titleFont UI_APPEARANCE_SELECTOR;
+@property (nonatomic, strong) IBInspectable UIColor *titleColor;
+@property (nonatomic, strong) IBInspectable UIColor *selectedTitleColor;
+@property (nonatomic, strong) IBInspectable UIFont *titleFont;
 @property (nonatomic, assign) IBInspectable CGFloat titleViewHeight;
 
 - (instancetype)initWithController:(NSArray *)controllers;

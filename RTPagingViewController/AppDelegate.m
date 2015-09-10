@@ -8,12 +8,17 @@
 
 #import "AppDelegate.h"
 #import "RTPagingViewController.h"
+#import "BaseTableViewController.h"
+#import "BaseViewController.h"
 
 @implementation AppDelegate
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    // return YES;
+
+    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor whiteColor];
@@ -30,16 +35,16 @@
     indicator.backgroundColor = [UIColor blueColor];
     pagingViewController.titleIndicatorView = indicator;
     
-    UIViewController *c0 = [[UIViewController alloc] init];
+    UIViewController *c0 = [[BaseViewController alloc] init];
     c0.title = @"View0";
     c0.view.backgroundColor = [UIColor orangeColor];
-    UIViewController *c1 = [[UIViewController alloc] init];
+    UIViewController *c1 = [[BaseViewController alloc] init];
     c1.title = @"View1";
     c1.view.backgroundColor = [UIColor grayColor];
-    UIViewController *c2 = [[UITableViewController alloc] init];
+    UIViewController *c2 = [[BaseTableViewController alloc] init];
     c2.title = @"View2";
     c2.view.backgroundColor = [UIColor greenColor];
-    UIViewController *c3 = [[UIPageViewController alloc] init];
+    UIViewController *c3 = [[BaseViewController alloc] init];
     c3.title = @"View3";
     c3.view.backgroundColor = [UIColor redColor];
     

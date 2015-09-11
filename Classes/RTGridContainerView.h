@@ -8,8 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-extern const CGFloat RTGridSizeDynamicSize;
-
+extern const CGFloat RTGridSizeDynamicSize;     // Not used!
 
 IB_DESIGNABLE
 @interface RTGridContainerView : UIScrollView

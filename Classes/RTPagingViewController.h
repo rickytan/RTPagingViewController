@@ -8,6 +8,18 @@
 #import <UIKit/UIKit.h>
 #import "RTGridContainerView.h"
 
+/*
+@class RTPagingBarItem;
+
+@interface RTPagingBarItem : UIBarItem
+@property (nonatomic, strong) NSString *badgeText;
+@property (nonatomic, strong) UIColor *badgeColor;
+@property (nonatomic, strong) UIFont *badgeFont;
+@property (nonatomic, strong) UIColor *badgeTextColor;
+@property (nonatomic, strong) UIImage *selectedImage;
+@property (nonatomic, assign) UIOffset titleOffset;
+@end
+*/
 
 IB_DESIGNABLE
 @interface RTPagingViewController : UIViewController
@@ -36,5 +48,6 @@ IB_DESIGNABLE
 
 
 @interface UIViewController (RTPagingViewController)
+// @property (nonatomic, strong) RTPagingBarItem *rt_pagingBarItem;
 @property (nonatomic, readonly) RTPagingViewController *rt_pagingViewController;
 @end

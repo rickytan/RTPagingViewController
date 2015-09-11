@@ -6,6 +6,8 @@
 //  Copyright (c) 2013年 iZJU Studio. All rights reserved.
 //
 
+#import <objc/runtime.h>
+
 #import "RTPagingViewController.h"
 
 @implementation UIViewController (RTPagingViewController)
@@ -19,7 +21,62 @@
     return (RTPagingViewController *)vc;
 }
 
+/*
+- (RTPagingBarItem *)rt_pagingBarItem
+{
+    RTPagingBarItem *item = objc_getAssociatedObject(self, (__bridge void *)NSStringFromClass([RTPagingBarItem class]));
+    if (!item) {
+        item = [[RTPagingBarItem alloc] init];
+        item.title = self.title;
+    }
+    return item;
+}
+
+- (void)setRt_pagingBarItem:(RTPagingBarItem *)rt_pagingBarItem
+{
+    objc_setAssociatedObject(self, (__bridge void *)NSStringFromClass([RTPagingBarItem class]), rt_pagingBarItem, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
 @end
+
+
+@interface RTPagingBarItem ()
+@property (nonatomic, strong) UIButton *button;
+@end
+
+@implementation RTPagingBarItem
+
+- (UIButton *)button
+{
+    if (!_button) {
+        _button = [UIButton buttonWithType:UIButtonTypeCustom];
+    }
+    return _button;
+}
+
+- (void)setTitleTextAttributes:(NSDictionary *)attributes forState:(UIControlState)state
+{
+    [super setTitleTextAttributes:attributes forState:state];
+
+    if (attributes[NSForegroundColorAttributeName]) {
+        [self.button setTitleColor:attributes[NSForegroundColorAttributeName]
+                          forState:state];
+    }
+    if (attributes[NSFontAttributeName]) {
+        self.button.titleLabel.font = attributes[NSFontAttributeName];
+    }
+    if (attributes[NSShadowAttributeName]) {
+        NSShadow *shadow = attributes[NSShadowAttributeName];
+        self.button.titleLabel.shadowOffset = shadow.shadowOffset;
+        self.button.titleLabel.layer.shadowRadius = shadow.shadowBlurRadius;
+        [self.button setTitleShadowColor:shadow.shadowColor
+                                forState:state];
+    }
+}
+ */
+
+@end
+
 
 @interface RTPagingViewController ()
 <UIScrollViewDelegate>
@@ -524,6 +581,7 @@
     [set minusSet:[NSSet setWithArray:_controllers]];
     NSArray *controllersToAdd = [set allObjects];
 
+    
     _controllers = controllers;
 
     [controllersToRemove makeObjectsPerformSelector:@selector(removeFromParentViewController)];

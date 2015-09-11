@@ -394,14 +394,14 @@
 
 - (void)updateTitleSelection
 {
-    /*
-     [self.titleArray makeObjectsPerformSelector:@selector(setSelected:)
-     withObject:@NO];
 
-     if (0 <= self.currentControllerIndex && self.currentControllerIndex < self.controllers.count) {
-     ((UIButton*)[self.titleArray objectAtIndex:self.currentControllerIndex]).selected = YES;
-     }
-     */
+    [self.titleView.gridItems makeObjectsPerformSelector:@selector(setSelected:)
+                                              withObject:@NO];
+
+    if (0 <= self.currentControllerIndex && self.currentControllerIndex < self.controllers.count) {
+        ((UIButton*)[self.titleView.gridItems objectAtIndex:self.currentControllerIndex]).selected = YES;
+    }
+
 }
 
 - (void)updateTitleIndicator

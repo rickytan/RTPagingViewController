@@ -29,7 +29,6 @@
 
 @property (nonatomic, assign) BOOL scrollingStarted;
 @property (nonatomic, assign) BOOL scrollMoved;
-@property (nonatomic, assign) CGPoint lastScrollOffset;
 
 - (void)loadTitles;
 - (void)loadControllers;
@@ -55,6 +54,17 @@
 
     self.titleViewHeight = 36.f;
     self.indicatorOffset = CGPointZero;
+
+    /*
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(onBeginRotate:)
+                                                 name:UIApplicationWillChangeStatusBarOrientationNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(onEndRotate:)
+                                                 name:UIApplicationDidChangeStatusBarOrientationNotification
+                                               object:nil];
+     */
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -144,6 +154,7 @@
     CGRectDivide((CGRect){{0, 0}, self.view.bounds.size}, &slice, &remainder, self.titleViewHeight, CGRectMinYEdge);
     self.titleView.frame = slice;
     self.contentView.frame = remainder;
+    self.scrollView.frame = self.contentView.bounds;
 
     CGFloat itemWidth = (self.titleView.bounds.size.width + self.titleView.itemMargin) / self.titleView.gridItems.count - self.titleView.itemMargin;
     self.titleView.gridSize = CGSizeMake(MAX(itemWidth, 60), self.titleViewHeight);
@@ -175,6 +186,69 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
     return [self.currentViewController shouldAutorotateToInterfaceOrientation:toInterfaceOrientation];
+}
+
+- (BOOL)shouldAutorotate
+{
+    return [self.currentViewController shouldAutorotate];
+}
+
+/*
+- (void)onBeginRotate:(NSNotification *)notification
+{
+    self.scrollView.scrollEnabled = NO;
+    [self updateOffset];
+    [self updateTitleIndicator];
+}
+
+- (void)onEndRotate:(NSNotification *)notification
+{
+    self.scrollView.scrollEnabled = YES;
+    [self updateOffset];
+    [self updateTitleIndicator];
+}
+*/
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+                                duration:(NSTimeInterval)duration
+{
+    self.scrollingStarted = NO;
+
+    self.scrollView.scrollEnabled = NO;
+    [UIView animateWithDuration:duration
+                     animations:^{
+                         [self updateOffset];
+                         [self updateTitleIndicator];
+                     }];
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    self.scrollView.scrollEnabled = YES;
+    [self updateOffset];
+    [self updateTitleIndicator];
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size
+       withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+    self.scrollingStarted = NO;
+
+    self.scrollView.scrollEnabled = NO;
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+        [self updateOffset];
+        [self updateTitleIndicator];
+    }
+                                 completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+                                     self.scrollView.scrollEnabled = YES;
+                                 }];
+}
+
+
+
+- (NSUInteger)supportedInterfaceOrientations
+{
+    return [self.currentViewController supportedInterfaceOrientations];
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle
@@ -283,7 +357,11 @@
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
     btn.titleLabel.font = self.titleFont;
     btn.titleLabel.textAlignment = NSTextAlignmentCenter;
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0
     btn.titleLabel.lineBreakMode = UILineBreakModeMiddleTruncation;
+#else
+    btn.titleLabel.lineBreakMode = NSLineBreakByTruncatingMiddle;
+#endif
     [btn setTitle:controller.title
          forState:UIControlStateNormal];
     [btn setTitleColor:self.titleColor
@@ -349,6 +427,7 @@
     CGRect frame = self.scrollView.bounds;
     frame.origin.x = index * width;
     controller.view.frame = frame;
+    controller.view.hidden = NO;
     [self.scrollView addSubview:controller.view];
     return controller;
 }
@@ -510,7 +589,6 @@
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
-    self.lastScrollOffset = scrollView.contentOffset;
     self.scrollingStarted = YES;
 }
 
@@ -519,30 +597,30 @@
     [self updateTitleSelection];
     [self updateTitleIndicator];
 
-    if (scrollView.layer.animationKeys.count)
-        return;
-
-    CGFloat width = self.scrollView.bounds.size.width;
-    CGFloat offsetIndex = scrollView.contentOffset.x / width;
-    if (offsetIndex - self.currentControllerIndex > 1.f) {
-        [_nextController endAppearanceTransition];
-        _nextController = nil;
-        _previousController = self.currentViewController;
-        ++_currentControllerIndex;
-        [self.currentViewController beginAppearanceTransition:NO
-                                                     animated:YES];
-    }
-    else if (offsetIndex - self.currentControllerIndex < -1.f) {
-        [_previousController endAppearanceTransition];
-        _previousController = nil;
-        _nextController = self.currentViewController;
-        --_currentControllerIndex;
-        [self.currentViewController beginAppearanceTransition:NO
-                                                     animated:YES];
-    }
-
 
     if (self.scrollingStarted) {
+
+        CGFloat width = self.scrollView.bounds.size.width;
+        CGFloat offsetIndex = scrollView.contentOffset.x / width;
+        if (offsetIndex - self.currentControllerIndex > 1.f) {
+            [_nextController endAppearanceTransition];
+            _nextController = nil;
+            _previousController = self.currentViewController;
+            ++_currentControllerIndex;
+            [self.currentViewController beginAppearanceTransition:NO
+                                                         animated:YES];
+        }
+        else if (offsetIndex - self.currentControllerIndex < -1.f) {
+            [_previousController endAppearanceTransition];
+            _previousController = nil;
+            _nextController = self.currentViewController;
+            --_currentControllerIndex;
+            [self.currentViewController beginAppearanceTransition:NO
+                                                         animated:YES];
+        }
+
+
+
         if (!self.scrollMoved) {
             [self.currentViewController beginAppearanceTransition:NO
                                                          animated:YES];

@@ -10,6 +10,7 @@
 #import "RTPagingViewController.h"
 #import "BaseTableViewController.h"
 #import "BaseViewController.h"
+#import "NavigationController.h"
 
 @implementation AppDelegate
 

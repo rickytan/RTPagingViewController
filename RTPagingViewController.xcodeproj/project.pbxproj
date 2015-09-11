@@ -23,6 +23,7 @@
 		9C757AE417B14E8700ADD58B /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9C757AE317B14E8700ADD58B /* Default@2x.png */; };
 		9C757AE617B14E8700ADD58B /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9C757AE517B14E8700ADD58B /* Default-568h@2x.png */; };
 		9C757AEF17B1553A00ADD58B /* RTPagingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C757AEE17B14EF400ADD58B /* RTPagingViewController.m */; };
+		9C85E9691BA25E6800E85E36 /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C85E9681BA25E6800E85E36 /* NavigationController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,6 +52,8 @@
 		9C757AE517B14E8700ADD58B /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		9C757AED17B14EF400ADD58B /* RTPagingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTPagingViewController.h; sourceTree = "<group>"; };
 		9C757AEE17B14EF400ADD58B /* RTPagingViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTPagingViewController.m; sourceTree = "<group>"; };
+		9C85E9671BA25E6800E85E36 /* NavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigationController.h; sourceTree = "<group>"; };
+		9C85E9681BA25E6800E85E36 /* NavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +110,8 @@
 				9C55C4D21BA162F60024E74C /* BaseViewController.m */,
 				9C55C4D41BA1636D0024E74C /* BaseTableViewController.h */,
 				9C55C4D51BA1636D0024E74C /* BaseTableViewController.m */,
+				9C85E9671BA25E6800E85E36 /* NavigationController.h */,
+				9C85E9681BA25E6800E85E36 /* NavigationController.m */,
 			);
 			path = RTPagingViewController;
 			sourceTree = "<group>";
@@ -210,6 +215,7 @@
 				9C55C4D01BA15EE30024E74C /* RTPagingContainerSegue.m in Sources */,
 				9C55C4D61BA1636D0024E74C /* BaseTableViewController.m in Sources */,
 				9C757AE017B14E8700ADD58B /* AppDelegate.m in Sources */,
+				9C85E9691BA25E6800E85E36 /* NavigationController.m in Sources */,
 				9C55C4C91BA149D80024E74C /* RTGridContainerView.m in Sources */,
 				9C757AEF17B1553A00ADD58B /* RTPagingViewController.m in Sources */,
 			);

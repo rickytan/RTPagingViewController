@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = 'RTPagingViewController'
-  s.version      = '1.0.0'
+  s.version      = '1.0.1'
   s.authors      = { 'Ricky Tan' => 'ricky.tan.xin@gmail.com' }
   s.homepage     = 'https://github.com/rickytan/RTPagingViewController'
   s.platform     = :ios

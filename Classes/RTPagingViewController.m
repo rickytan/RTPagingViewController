@@ -22,57 +22,57 @@
 }
 
 /*
-- (RTPagingBarItem *)rt_pagingBarItem
-{
-    RTPagingBarItem *item = objc_getAssociatedObject(self, (__bridge void *)NSStringFromClass([RTPagingBarItem class]));
-    if (!item) {
-        item = [[RTPagingBarItem alloc] init];
-        item.title = self.title;
-    }
-    return item;
-}
+ - (RTPagingBarItem *)rt_pagingBarItem
+ {
+ RTPagingBarItem *item = objc_getAssociatedObject(self, (__bridge void *)NSStringFromClass([RTPagingBarItem class]));
+ if (!item) {
+ item = [[RTPagingBarItem alloc] init];
+ item.title = self.title;
+ }
+ return item;
+ }
 
-- (void)setRt_pagingBarItem:(RTPagingBarItem *)rt_pagingBarItem
-{
-    objc_setAssociatedObject(self, (__bridge void *)NSStringFromClass([RTPagingBarItem class]), rt_pagingBarItem, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
+ - (void)setRt_pagingBarItem:(RTPagingBarItem *)rt_pagingBarItem
+ {
+ objc_setAssociatedObject(self, (__bridge void *)NSStringFromClass([RTPagingBarItem class]), rt_pagingBarItem, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+ }
 
-@end
+ @end
 
 
-@interface RTPagingBarItem ()
-@property (nonatomic, strong) UIButton *button;
-@end
+ @interface RTPagingBarItem ()
+ @property (nonatomic, strong) UIButton *button;
+ @end
 
-@implementation RTPagingBarItem
+ @implementation RTPagingBarItem
 
-- (UIButton *)button
-{
-    if (!_button) {
-        _button = [UIButton buttonWithType:UIButtonTypeCustom];
-    }
-    return _button;
-}
+ - (UIButton *)button
+ {
+ if (!_button) {
+ _button = [UIButton buttonWithType:UIButtonTypeCustom];
+ }
+ return _button;
+ }
 
-- (void)setTitleTextAttributes:(NSDictionary *)attributes forState:(UIControlState)state
-{
-    [super setTitleTextAttributes:attributes forState:state];
+ - (void)setTitleTextAttributes:(NSDictionary *)attributes forState:(UIControlState)state
+ {
+ [super setTitleTextAttributes:attributes forState:state];
 
-    if (attributes[NSForegroundColorAttributeName]) {
-        [self.button setTitleColor:attributes[NSForegroundColorAttributeName]
-                          forState:state];
-    }
-    if (attributes[NSFontAttributeName]) {
-        self.button.titleLabel.font = attributes[NSFontAttributeName];
-    }
-    if (attributes[NSShadowAttributeName]) {
-        NSShadow *shadow = attributes[NSShadowAttributeName];
-        self.button.titleLabel.shadowOffset = shadow.shadowOffset;
-        self.button.titleLabel.layer.shadowRadius = shadow.shadowBlurRadius;
-        [self.button setTitleShadowColor:shadow.shadowColor
-                                forState:state];
-    }
-}
+ if (attributes[NSForegroundColorAttributeName]) {
+ [self.button setTitleColor:attributes[NSForegroundColorAttributeName]
+ forState:state];
+ }
+ if (attributes[NSFontAttributeName]) {
+ self.button.titleLabel.font = attributes[NSFontAttributeName];
+ }
+ if (attributes[NSShadowAttributeName]) {
+ NSShadow *shadow = attributes[NSShadowAttributeName];
+ self.button.titleLabel.shadowOffset = shadow.shadowOffset;
+ self.button.titleLabel.layer.shadowRadius = shadow.shadowBlurRadius;
+ [self.button setTitleShadowColor:shadow.shadowColor
+ forState:state];
+ }
+ }
  */
 
 @end
@@ -113,14 +113,14 @@
     self.indicatorOffset = CGPointZero;
 
     /*
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(onBeginRotate:)
-                                                 name:UIApplicationWillChangeStatusBarOrientationNotification
-                                               object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(onEndRotate:)
-                                                 name:UIApplicationDidChangeStatusBarOrientationNotification
-                                               object:nil];
+     [[NSNotificationCenter defaultCenter] addObserver:self
+     selector:@selector(onBeginRotate:)
+     name:UIApplicationWillChangeStatusBarOrientationNotification
+     object:nil];
+     [[NSNotificationCenter defaultCenter] addObserver:self
+     selector:@selector(onEndRotate:)
+     name:UIApplicationDidChangeStatusBarOrientationNotification
+     object:nil];
      */
 }
 
@@ -169,7 +169,8 @@
     [self.contentView addSubview:self.scrollView];
 
     [self loadTitles];
-    [self loadControllers];
+    [self loadControllerAtIndex:self.currentControllerIndex];
+    //    [self loadControllers];
 
     //[UIView setAnimationsEnabled:NO];
     [self updateTitleSelection];
@@ -251,26 +252,26 @@
 }
 
 /*
-- (void)onBeginRotate:(NSNotification *)notification
-{
-    self.scrollView.scrollEnabled = NO;
-    [self updateOffset];
-    [self updateTitleIndicator];
-}
+ - (void)onBeginRotate:(NSNotification *)notification
+ {
+ self.scrollView.scrollEnabled = NO;
+ [self updateOffset];
+ [self updateTitleIndicator];
+ }
 
-- (void)onEndRotate:(NSNotification *)notification
-{
-    self.scrollView.scrollEnabled = YES;
-    [self updateOffset];
-    [self updateTitleIndicator];
-}
-*/
+ - (void)onEndRotate:(NSNotification *)notification
+ {
+ self.scrollView.scrollEnabled = YES;
+ [self updateOffset];
+ [self updateTitleIndicator];
+ }
+ */
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
                                 duration:(NSTimeInterval)duration
 {
     self.scrollingStarted = NO;
-
+    self.scrollMoved = NO;
     self.scrollView.scrollEnabled = NO;
     [UIView animateWithDuration:duration
                      animations:^{
@@ -290,7 +291,7 @@
        withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
 {
     self.scrollingStarted = NO;
-
+    self.scrollMoved = NO;
     self.scrollView.scrollEnabled = NO;
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
         [self updateOffset];
@@ -453,7 +454,11 @@
     if (self.controllers.count > 0) {
         [self.scrollView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
         self.scrollView.contentSize = CGSizeZero;
-        self.titleIndicatorView.hidden = NO;
+
+        [self updateOffset];
+        [self loadControllerAtIndex:self.currentControllerIndex];
+        [self updateTitleSelection];
+        [self updateTitleIndicator];
 
         NSInteger i = 0;
         for (UIViewController *controller in self.controllers) {
@@ -485,6 +490,7 @@
     frame.origin.x = index * width;
     controller.view.frame = frame;
     controller.view.hidden = NO;
+    controller.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     [self.scrollView addSubview:controller.view];
     return controller;
 }
@@ -568,10 +574,14 @@
 
 - (void)setControllers:(NSArray *)controllers
 {
+    [self setControllers:controllers
+                animated:NO];
+}
+
+- (void)setControllers:(NSArray *)controllers animated:(BOOL)animated
+{
     if ([_controllers isEqualToArray:controllers])
         return;
-
-    _currentControllerIndex = 0;
 
     NSMutableSet *set = [NSMutableSet setWithArray:_controllers];
     [set minusSet:[NSSet setWithArray:controllers]];
@@ -581,22 +591,123 @@
     [set minusSet:[NSSet setWithArray:_controllers]];
     NSArray *controllersToAdd = [set allObjects];
 
-    
+    [controllersToRemove makeObjectsPerformSelector:@selector(willMoveToParentViewController:)
+                                         withObject:nil];
+
+
+    for (UIViewController *vc in controllersToAdd) {
+        [self addChildViewController:vc];
+    }
+
+    UIViewController *oldCurrentController = _currentControllerIndex >= 0 ? _controllers[_currentControllerIndex] : nil;
+
+    NSInteger newCurrent = MAX(0, MIN(controllers.count - 1, _currentControllerIndex));
+    UIViewController *newCurrentController = controllers[newCurrent];
+
+
+    if (_previousController != newCurrentController) {
+        [_previousController endAppearanceTransition];
+    }
+
+    if (_nextController != newCurrentController) {
+        [_nextController endAppearanceTransition];
+    }
+
+    if (oldCurrentController != newCurrentController) {
+        if (oldCurrentController) {
+            if (!self.scrollMoved) {
+                [oldCurrentController beginAppearanceTransition:NO
+                                                       animated:animated];
+
+            }
+            if (newCurrentController != _previousController && newCurrentController != _nextController) {
+                [newCurrentController beginAppearanceTransition:YES
+                                                       animated:animated];
+                [_previousController beginAppearanceTransition:NO
+                                                      animated:animated];
+                [_nextController beginAppearanceTransition:NO
+                                                  animated:animated];
+            }
+
+            [UIView transitionFromView:oldCurrentController.view
+                                toView:newCurrentController.view
+                              duration:animated ? 0.25 : 0
+                               options:UIViewAnimationOptionTransitionCrossDissolve
+                            completion:^(BOOL finished) {
+                                [newCurrentController endAppearanceTransition];
+                                [oldCurrentController endAppearanceTransition];
+
+                                if (_previousController != newCurrentController)
+                                    [_previousController endAppearanceTransition];
+                                if (_nextController != newCurrentController)
+                                    [_nextController endAppearanceTransition];
+                                _previousController = nil;
+                                _nextController = nil;
+
+                                [controllersToRemove makeObjectsPerformSelector:@selector(removeFromParentViewController)];
+                                [controllersToAdd makeObjectsPerformSelector:@selector(didMoveToParentViewController:) withObject:self];
+                            }];
+        }
+        else {
+            [controllersToRemove makeObjectsPerformSelector:@selector(removeFromParentViewController)];
+            [controllersToAdd makeObjectsPerformSelector:@selector(didMoveToParentViewController:) withObject:self];
+        }
+    }
+    else {
+        if (self.scrollMoved) {
+            [oldCurrentController endAppearanceTransition];
+
+        }
+
+        if (newCurrentController != _previousController && newCurrentController != _nextController) {
+            [newCurrentController beginAppearanceTransition:YES
+                                                   animated:animated];
+            [_previousController beginAppearanceTransition:NO
+                                                  animated:animated];
+            [_nextController beginAppearanceTransition:NO
+                                              animated:animated];
+        }
+        [newCurrentController endAppearanceTransition];
+
+        if (_previousController != newCurrentController)
+            [_previousController endAppearanceTransition];
+        if (_nextController != newCurrentController)
+            [_nextController endAppearanceTransition];
+
+        _previousController = nil;
+        _nextController = nil;
+
+        [controllersToRemove makeObjectsPerformSelector:@selector(removeFromParentViewController)];
+        [controllersToAdd makeObjectsPerformSelector:@selector(didMoveToParentViewController:) withObject:self];
+    }
+
+
+    _currentControllerIndex = newCurrent;
     _controllers = controllers;
 
-    [controllersToRemove makeObjectsPerformSelector:@selector(removeFromParentViewController)];
     if (self.isViewLoaded) {
-        [self loadTitles];
-        [self loadControllers];
-        [self updateTitleSelection];
+        self.scrollingStarted = NO;     // IMPORTANT !!!
+        self.scrollMoved = NO;
+        self.scrollView.scrollEnabled = NO;
+
+        [UIView animateWithDuration:animated ? 0.25 : 0
+                         animations:^{
+                             self.scrollView.scrollEnabled = YES;
+                             [self loadTitles];
+                             [self loadControllerAtIndex:_currentControllerIndex];
+                             [self updateTitleSelection];
+                             [self.view setNeedsLayout];
+                         }];
     }
+
+
 }
 
 - (void)setTitleIndicatorView:(UIView *)titleIndicatorView
 {
     if (_titleIndicatorView != titleIndicatorView) {
         _titleIndicatorView = titleIndicatorView;
-        _titleIndicatorView.hidden = YES;
+        _titleIndicatorView.autoresizingMask = UIViewAutoresizingNone;
         if (self.isViewLoaded) {
             [self.titleView addSubview:titleIndicatorView];
         }
@@ -694,7 +805,7 @@
             if ((NSInteger)currentIndex + 1 < self.controllers.count) {
                 if (![self isControllerVisible:_previousController]) {
                     [_previousController endAppearanceTransition];
-                    [_previousController.view removeFromSuperview];
+                    //[_previousController.view removeFromSuperview];
                     _previousController = nil;
                 }
                 if (!_nextController) {
@@ -709,7 +820,7 @@
             if ((NSInteger)currentIndex - 1 >= 0) {
                 if (![self isControllerVisible:_nextController]) {
                     [_nextController endAppearanceTransition];
-                    [_nextController.view removeFromSuperview];
+                    //[_nextController.view removeFromSuperview];
                     _nextController = nil;
                 }
                 if (!_previousController) {
@@ -726,6 +837,8 @@
                      withVelocity:(CGPoint)velocity
               targetContentOffset:(inout CGPoint *)targetContentOffset
 {
+    if (!self.scrollMoved)
+        return;
 
     NSInteger index = (NSInteger)floorf(targetContentOffset->x / self.scrollView.bounds.size.width);
     if (index == self.currentControllerIndex) {

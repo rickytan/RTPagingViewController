@@ -666,18 +666,19 @@
     else {
         if (self.scrollMoved) {
             [oldCurrentController endAppearanceTransition];
-
         }
 
         if (newCurrentController != _previousController && newCurrentController != _nextController) {
-            [newCurrentController beginAppearanceTransition:YES
-                                                   animated:animated];
+            if (self.scrollMoved)
+                [newCurrentController beginAppearanceTransition:YES
+                                                       animated:animated];
             [_previousController beginAppearanceTransition:NO
                                                   animated:animated];
             [_nextController beginAppearanceTransition:NO
                                               animated:animated];
         }
-        [newCurrentController endAppearanceTransition];
+        if (self.scrollMoved)
+            [newCurrentController endAppearanceTransition];
 
         if (_previousController != newCurrentController)
             [_previousController endAppearanceTransition];
@@ -712,7 +713,7 @@
 
 - (void)appendPage:(UIViewController *)controller
 {
-    self.controllers = [self.childViewControllers arrayByAddingObject:controller];
+    self.controllers = [_controllers arrayByAddingObject:controller];
 }
 
 - (void)removePage:(UIViewController *)controller

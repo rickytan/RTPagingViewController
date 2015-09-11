@@ -10,7 +10,6 @@
 		9C55C4C91BA149D80024E74C /* RTGridContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C55C4C81BA149D80024E74C /* RTGridContainerView.m */; };
 		9C55C4CB1BA14EB90024E74C /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9C55C4CA1BA14EB90024E74C /* Images.xcassets */; };
 		9C55C4CD1BA15EAD0024E74C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9C55C4CC1BA15EAD0024E74C /* Main.storyboard */; };
-		9C55C4D01BA15EE30024E74C /* RTPagingContainerSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C55C4CF1BA15EE30024E74C /* RTPagingContainerSegue.m */; };
 		9C55C4D31BA162F60024E74C /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C55C4D21BA162F60024E74C /* BaseViewController.m */; };
 		9C55C4D61BA1636D0024E74C /* BaseTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C55C4D51BA1636D0024E74C /* BaseTableViewController.m */; };
 		9C757AD017B14E8700ADD58B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C757ACF17B14E8700ADD58B /* UIKit.framework */; };
@@ -31,8 +30,6 @@
 		9C55C4C81BA149D80024E74C /* RTGridContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RTGridContainerView.m; sourceTree = "<group>"; };
 		9C55C4CA1BA14EB90024E74C /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		9C55C4CC1BA15EAD0024E74C /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
-		9C55C4CE1BA15EE30024E74C /* RTPagingContainerSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTPagingContainerSegue.h; sourceTree = "<group>"; };
-		9C55C4CF1BA15EE30024E74C /* RTPagingContainerSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RTPagingContainerSegue.m; sourceTree = "<group>"; };
 		9C55C4D11BA162F60024E74C /* BaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
 		9C55C4D21BA162F60024E74C /* BaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseViewController.m; sourceTree = "<group>"; };
 		9C55C4D41BA1636D0024E74C /* BaseTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseTableViewController.h; sourceTree = "<group>"; };
@@ -137,8 +134,6 @@
 				9C757AEE17B14EF400ADD58B /* RTPagingViewController.m */,
 				9C55C4C71BA149D80024E74C /* RTGridContainerView.h */,
 				9C55C4C81BA149D80024E74C /* RTGridContainerView.m */,
-				9C55C4CE1BA15EE30024E74C /* RTPagingContainerSegue.h */,
-				9C55C4CF1BA15EE30024E74C /* RTPagingContainerSegue.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -212,7 +207,6 @@
 			files = (
 				9C757ADC17B14E8700ADD58B /* main.m in Sources */,
 				9C55C4D31BA162F60024E74C /* BaseViewController.m in Sources */,
-				9C55C4D01BA15EE30024E74C /* RTPagingContainerSegue.m in Sources */,
 				9C55C4D61BA1636D0024E74C /* BaseTableViewController.m in Sources */,
 				9C757AE017B14E8700ADD58B /* AppDelegate.m in Sources */,
 				9C85E9691BA25E6800E85E36 /* NavigationController.m in Sources */,

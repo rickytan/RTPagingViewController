@@ -11,11 +11,22 @@
 
 @implementation RTPagingContainerSegue
 
+- (instancetype)initWithIdentifier:(NSString *)identifier
+                            source:(UIViewController *)source
+                       destination:(UIViewController *)destination
+{
+    self = [super initWithIdentifier:identifier source:source destination:destination];
+    if (self) {
+        [self perform];
+    }
+    return self;
+}
+
 - (void)perform
 {
     RTPagingViewController *pagingController = self.sourceViewController;
     UIViewController *controller = self.destinationViewController;
-    [pagingController addChildViewController:controller];
+    [pagingController appendPage:controller];
 }
 
 @end

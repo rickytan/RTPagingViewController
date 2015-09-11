@@ -99,6 +99,7 @@
 @end
 
 @implementation RTPagingViewController
+@synthesize controllers = _controllers;
 
 - (void)commonInit
 {
@@ -122,6 +123,15 @@
      name:UIApplicationDidChangeStatusBarOrientationNotification
      object:nil];
      */
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        [self commonInit];
+    }
+    return self;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -150,7 +160,7 @@
     UIScrollView *view = [[UIScrollView alloc] initWithFrame:[UIScreen mainScreen].bounds];
     view.scrollsToTop = NO;
     view.autoresizesSubviews = YES;
-
+    view.backgroundColor = [UIColor whiteColor];
     self.view = view;
 }
 
@@ -170,11 +180,8 @@
 
     [self loadTitles];
     [self loadControllerAtIndex:self.currentControllerIndex];
-    //    [self loadControllers];
-
-    //[UIView setAnimationsEnabled:NO];
     [self updateTitleSelection];
-    //[UIView setAnimationsEnabled:YES];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -188,7 +195,6 @@
 {
     [super viewDidAppear:animated];
     [self.currentViewController endAppearanceTransition];
-
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -222,7 +228,7 @@
     // must after  offset is updated!!
     [self updateTitleIndicator];
 
-    self.currentViewController.view.frame = self.scrollView.bounds;
+    [self loadControllerAtIndex:self.currentControllerIndex];
 }
 
 - (void)didReceiveMemoryWarning
@@ -527,7 +533,6 @@
         frame.size.height = self.titleViewHeight;
 
         _titleView = [[RTGridContainerView alloc] initWithFrame:frame];
-        _titleView.backgroundColor = [UIColor clearColor];
         _titleView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
         _titleView.autoresizesSubviews = YES;
     }
@@ -543,7 +548,6 @@
 {
     if (!_contentView) {
         _contentView = [[UIView alloc] initWithFrame:[self frameForContentView]];
-        _contentView.backgroundColor = [UIColor clearColor];
         _contentView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         _contentView.autoresizesSubviews = YES;
     }
@@ -570,6 +574,12 @@
 - (void)onTitleSelected:(UIButton *)button
 {
     self.currentControllerIndex = button.tag;
+}
+
+- (NSArray *)controllers
+{
+    [self view];
+    return _controllers;
 }
 
 - (void)setControllers:(NSArray *)controllers
@@ -632,7 +642,7 @@
             [UIView transitionFromView:oldCurrentController.view
                                 toView:newCurrentController.view
                               duration:animated ? 0.25 : 0
-                               options:UIViewAnimationOptionTransitionCrossDissolve
+                               options:UIViewAnimationOptionTransitionCrossDissolve | UIViewAnimationOptionShowHideTransitionViews | UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionLayoutSubviews
                             completion:^(BOOL finished) {
                                 [newCurrentController endAppearanceTransition];
                                 [oldCurrentController endAppearanceTransition];
@@ -694,13 +704,27 @@
                          animations:^{
                              self.scrollView.scrollEnabled = YES;
                              [self loadTitles];
-                             [self loadControllerAtIndex:_currentControllerIndex];
                              [self updateTitleSelection];
                              [self.view setNeedsLayout];
                          }];
     }
+}
 
+- (void)appendPage:(UIViewController *)controller
+{
+    self.controllers = [self.childViewControllers arrayByAddingObject:controller];
+}
 
+- (void)removePage:(UIViewController *)controller
+{
+    NSMutableArray *arr = [self.childViewControllers mutableCopy];
+    [arr removeObject:controller];
+    self.controllers = [NSArray arrayWithArray:arr];
+}
+
+- (void)removePageAtIndex:(NSInteger)index
+{
+    [self removePage:self.childViewControllers[index]];
 }
 
 - (void)setTitleIndicatorView:(UIView *)titleIndicatorView

@@ -80,10 +80,21 @@ const CGFloat RTGridSizeDynamicSize = -1.f;
 {
     [self.gridItems makeObjectsPerformSelector:@selector(removeFromSuperview)];
 
-    _gridItems = gridItems;
+    BOOL animation = [UIView areAnimationsEnabled];
+    [UIView setAnimationsEnabled:NO];
+
+    NSInteger index = 0;
     for (UIView *view in gridItems) {
+        if (index < _gridItems.count) {
+            view.frame = [(UIView *)_gridItems[index++] frame];
+        }
         [self addSubview:view];
     }
+    
+    [UIView setAnimationsEnabled:animation];
+
+    _gridItems = gridItems;
+
     [self setNeedsLayout];
     [self invalidateIntrinsicContentSize];
 }

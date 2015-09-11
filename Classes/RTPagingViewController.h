@@ -45,9 +45,10 @@ IB_DESIGNABLE
 - (instancetype)initWithController:(NSArray *)controllers;
 
 - (void)setControllers:(NSArray *)controllers animated:(BOOL)animated;
-- (void)addViewController:(UIViewController *)controller
-                   atPage:(NSInteger)page;
+
 - (void)appendPage:(UIViewController *)controller;
+- (void)removePage:(UIViewController *)controller;
+- (void)removePageAtIndex:(NSInteger)index;
 
 @end
 

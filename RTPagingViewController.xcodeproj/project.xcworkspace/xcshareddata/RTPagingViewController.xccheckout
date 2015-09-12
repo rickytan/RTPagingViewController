@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>5B9075AE-93E7-4339-BD40-FBDB6570ECAE</string>
 	<key>IDESourceControlProjectName</key>
-	<string>project</string>
+	<string>RTPagingViewController</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>E2D09DE266FB62A9FC96A09619ADBBCA12C50557</key>
 		<string>https://github.com/rickytan/RTPagingViewController.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>RTPagingViewController.xcodeproj/project.xcworkspace</string>
+	<string>RTPagingViewController.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>E2D09DE266FB62A9FC96A09619ADBBCA12C50557</key>

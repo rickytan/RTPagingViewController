@@ -277,7 +277,6 @@
                                 duration:(NSTimeInterval)duration
 {
     self.scrollingStarted = NO;
-    self.scrollMoved = NO;
     self.scrollView.scrollEnabled = NO;
     [UIView animateWithDuration:duration
                      animations:^{
@@ -289,6 +288,7 @@
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
     self.scrollView.scrollEnabled = YES;
+    self.scrollMoved = NO;
     [self updateOffset];
     [self updateTitleIndicator];
 }
@@ -297,7 +297,6 @@
        withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
 {
     self.scrollingStarted = NO;
-    self.scrollMoved = NO;
     self.scrollView.scrollEnabled = NO;
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
         [self updateOffset];
@@ -305,6 +304,7 @@
     }
                                  completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
                                      self.scrollView.scrollEnabled = YES;
+                                     self.scrollMoved = NO;
                                  }];
 }
 

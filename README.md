@@ -16,6 +16,8 @@ In a normal case, a controller's view appearence method should be called in foll
 
 So I decided to build my own Container Controller, which handles view appearence correcttly, and it takes time...
 
+![Apple Doc](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIViewController_Class/Art/UIViewController%20Class%20Reference_2x.png)
+
 Finally, I have got the right result:
 
 ![](./ScreenShot/ss0.png)

@@ -394,9 +394,9 @@
 
 - (void)updateTitleSelection
 {
-
-    [self.titleView.gridItems makeObjectsPerformSelector:@selector(setSelected:)
-                                              withObject:@NO];
+    [self.titleView.gridItems enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        ((UIButton *)obj).selected = NO;
+    }];
 
     if (0 <= self.currentControllerIndex && self.currentControllerIndex < self.controllers.count) {
         ((UIButton*)[self.titleView.gridItems objectAtIndex:self.currentControllerIndex]).selected = YES;

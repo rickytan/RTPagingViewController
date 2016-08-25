@@ -371,7 +371,10 @@
     }
     _previousController = nil;
     _nextController = nil;
-
+    
+    if (self.onIndexChanged) {
+        self.onIndexChanged(self.currentControllerIndex);
+    }
 }
 
 - (void)updateOffset

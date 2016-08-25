@@ -29,6 +29,7 @@ IB_DESIGNABLE
     UIViewController            * _previousController;
     UIViewController            * _nextController;
 }
+@property (nonatomic, copy) void (^onIndexChanged)(NSInteger index);
 @property (nonatomic, strong, readonly) RTGridContainerView *titleView;
 @property (nonatomic, strong) UIView *titleIndicatorView;
 @property (nonatomic, assign) CGPoint indicatorOffset;
